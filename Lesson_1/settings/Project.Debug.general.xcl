@@ -1,0 +1,13 @@
+C:\tools\iar\arm\bin\armPROC.dll
+
+ C:\tools\iar\arm\bin\armSIM2.dll
+
+ E:\Embedded_Programming\Lesson_1\Debug\Exe\Project.out
+
+ --plugin=C:\tools\iar\arm\bin\armLibSupportUniversal.dll
+
+ --device_macro=C:\tools\iar\arm/config/debugger/TexasInstruments/MSP432P401R.dmac
+
+ 
+
+

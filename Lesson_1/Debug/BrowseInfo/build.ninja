@@ -1,0 +1,41 @@
+##IAR Ninja build file
+
+
+#Rules
+rule COMPILER_XCL
+  command = C$:\tools\iar\common\bin\XclFileGenerator.exe $xclcommand -f "$rspfile_name"
+  description = IAR_NEW_TOOL+++COMPILER_XCL+++$out
+  rspfile = $rspfile_name
+  rspfile_content = $flags
+
+rule INDEXER
+  command = C$:\tools\iar\common\bin\SourceIndexer.exe $flags
+  depfile = $out.dep
+  deps = gcc
+  description = IAR_NEW_TOOL+++INDEXER+++$out
+
+rule MAKEBROWSE
+  command = C$:\tools\iar\common\bin\makeBrowseData.exe $flags
+  description = IAR_NEW_TOOL+++MAKEBROWSE+++$out
+
+rule PDBLINK
+  command = C$:\tools\iar\common\bin\PbdLink.exe $flags
+  description = IAR_NEW_TOOL+++PDBLINK+++$out
+
+
+
+#Build steps
+build E$:\Embedded_Programming\Lesson_1\Debug\BrowseInfo\main.xcl : COMPILER_XCL 
+    flags = E$:\Embedded_Programming\Lesson_1\main.c -o E$:\Embedded_Programming\Lesson_1\Debug\Obj\ --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa --no_clustering --no_scheduling --debug --endian=little --cpu=Cortex-M4 -e --fpu=VFPv4_sp --dlib_config C$:\tools\iar\arm\inc\c\DLib_Config_Normal.h -Ol --predef_macros E$:\Embedded_Programming\Lesson_1\Debug\BrowseInfo\main.tmp
+    rspfile_name = E$:\Embedded_Programming\Lesson_1\Debug\BrowseInfo\main.xcl.rsp
+    xclcommand = -source_file E$:\Embedded_Programming\Lesson_1\main.c -xcl_file E$:\Embedded_Programming\Lesson_1\Debug\BrowseInfo\main.xcl -macro_file E$:\Embedded_Programming\Lesson_1\Debug\BrowseInfo\main.tmp -icc_path C$:\tools\iar\arm\bin\iccarm.exe
+
+build E$:\Embedded_Programming\Lesson_1\Debug\BrowseInfo\main.pbi : INDEXER E$:\Embedded_Programming\Lesson_1\Debug\BrowseInfo\main.xcl | E$:\Embedded_Programming\Lesson_1\main.c
+    flags = -out=E$:\Embedded_Programming\Lesson_1\Debug\BrowseInfo\main.pbi -f E$:\Embedded_Programming\Lesson_1\Debug\BrowseInfo\main.xcl
+
+build E$:\Embedded_Programming\Lesson_1\Debug\BrowseInfo\Project.pbw : MAKEBROWSE E$:\Embedded_Programming\Lesson_1\Debug\BrowseInfo\Project.pbd
+    flags = E$:\Embedded_Programming\Lesson_1\Debug\BrowseInfo\Project.pbd -output E$:\Embedded_Programming\Lesson_1\Debug\BrowseInfo\Project.pbw
+
+build E$:\Embedded_Programming\Lesson_1\Debug\BrowseInfo\Project.pbd : PDBLINK E$:\Embedded_Programming\Lesson_1\Debug\BrowseInfo\main.pbi
+    flags = -M E$:\Embedded_Programming\Lesson_1\Debug\BrowseInfo\Project.pbd E$:\Embedded_Programming\Lesson_1\Debug\BrowseInfo\main.pbi
+
